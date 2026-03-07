@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:/Users/Saba/.conda/envs/financeAI/python.exe",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.REPL.enableREPLSmartSend": false
+}
