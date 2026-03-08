@@ -5,13 +5,12 @@ from app.services.extract_payments import get_payments_df
 
 router = APIRouter()
 
-@router.post("/")
+@router.post("/upload_transactions_excel")
 async def upload_transactions_excel(file:UploadFile=File(...)):
-    temp_path = f"/tmp/{file.filename}"
-    with open(temp_path, "wb") as f:
-        f.write(await file.read())
-    df = parse_excel(temp_path)
-    df.to_csv(f"/tmp/{file.filename.replace("xlsx", "csv")}", index=False)
+    
+    df = parse_excel(file)
+    df.to_csv('./df.csv', index=False)
+
     return {"message": "transactions uploaded successfully"}
 
 
