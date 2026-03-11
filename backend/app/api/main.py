@@ -8,3 +8,4 @@ from app.api.routes_upload import router
 create_db()
 
 app = FastAPI()
+
