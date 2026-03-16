@@ -1,20 +1,22 @@
-from sqlalchemy import Column, String, Integer, Float, DateTime
-from app.database.db import Base
-import datetime
+# from sqlalchemy import Column, ForeignKey, String, Integer, Float, DateTime
+# from app.database.db import Base
+# import datetime
 
-class Transaction(Base):
-    __tablename__ = "transactions"
+# class Transaction(Base):
+#     __tablename__ = "transactions"
 
-    id = Column(Integer, primary_key=True, index=True)
+#     id = Column(Integer, primary_key=True, index=True)
+    
+#     # user_id = Column(Integer)
 
-    date = Column(DateTime)
+#     date = Column(DateTime)
 
-    details = Column(String)
+#     details = Column(String)
 
-    gel = Column(Float)
-    usd = Column(Float)
-    eur = Column(Float)
-    gbp = Column(Float)
+#     gel = Column(Float)
+#     usd = Column(Float)
+#     eur = Column(Float)
+#     gbp = Column(Float)
 
-    transaction_type = Column(String)
+#     transaction_type = Column(String)
 
