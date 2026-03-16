@@ -39,4 +39,4 @@ Exact structure:
 }
 
 ## INPUT
-{merchants_list}'''
+'''

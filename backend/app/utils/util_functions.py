@@ -34,3 +34,8 @@ def parse_categorization_response(response):
         return pd.DataFrame()
 
     return categories_df
+
+def get_unknown_merchants(merchants_df:pd.DataFrame, merchants_list:list):
+    existing_merchants = list(merchants_df["merchant"].unique())
+    merchants_list = [merchant for merchant in merchants_list if merchant not in existing_merchants]
+    return merchants_list 
