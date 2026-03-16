@@ -14,4 +14,5 @@ def get_payments_df(transactions_df:pd.DataFrame) -> pd.DataFrame:
     payments_df["transaction_object"] = payments_df["transaction_object"].fillna(value="gadakhda") # fill wherever object was unavailable
     payments_df.drop(columns=["transaction_type"],inplace=True)
     payments_df.fillna(value=0, inplace=True) # fill other NaN values
+    payments_df["transaction_object"] = payments_df["transaction_object"].apply(lambda x: x.lower()) # convert to lowercase
     return payments_df
