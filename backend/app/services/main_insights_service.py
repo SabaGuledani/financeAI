@@ -5,7 +5,7 @@ def get_spending_by_month(df:pd.DataFrame):
     df["month"] = df["თარიღი"].dt.month
     df["year"] = df["თარიღი"].dt.year
     
-    df = df.groupby(["month","year"])[["GEL","USD","EUR","GBP"]].sum()
+    df = df.groupby(["year","month"])[["GEL","USD","EUR","GBP"]].sum()
     return df
 def get_spending_by_category(df:pd.DataFrame):
     print(df.columns)

@@ -288,6 +288,81 @@ body {
   gap: 16px;
 }
 
+#spending-over-time-chart {
+  display: none;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Chartist line overrides */
+#spending-over-time-chart .ct-line {
+  stroke: #6c63ff;
+  stroke-width: 3px;
+  fill: none;
+}
+
+#spending-over-time-chart .ct-point {
+  stroke: #6c63ff;
+  stroke-width: 12px;
+  stroke-linecap: round;
+  cursor: pointer;
+  transition: stroke-width 0.15s, stroke 0.15s;
+}
+
+#spending-over-time-chart .ct-point:hover {
+  stroke: #4b44cc;
+  stroke-width: 16px;
+}
+
+#spending-over-time-chart .ct-area {
+  fill: #6c63ff;
+  fill-opacity: 0.08;
+}
+
+#spending-over-time-chart .ct-grids .ct-grid {
+  stroke: #e8e8f0;
+  stroke-dasharray: 4px 4px;
+}
+
+#spending-over-time-chart .ct-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #888;
+  fill: #888;
+}
+
+/* ─── LINE CHART TOOLTIP ─────────────────────────────── */
+.line-tooltip {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #1e1e2e;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 14px;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  white-space: nowrap;
+}
+
+.tt-month {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tt-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  color: #a89fff;
+}
+
 /* ─── BEHAVIOR SECTION ───────────────────────────────── */
 .behavior-label {
   font-size: 28px;
