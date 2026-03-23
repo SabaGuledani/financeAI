@@ -57,11 +57,17 @@
             <div class="main-insights-mid">
                 <div class="card top-merchant">
                     <p class="card-title">Top Merchant</p>
-                    <div class="chart-placeholder">Top merchant data</div>
+                    <div class="merchant-center">
+                        <p id="top-merchant-name" class="merchant-name">—</p>
+                        <p id="top-merchant-amount" class="merchant-amount"></p>
+                    </div>
                 </div>
                 <div class="card biggest-purchase">
                     <p class="card-title">Biggest Purchase</p>
-                    <div class="chart-placeholder">Purchase data</div>
+                    <div class="merchant-center">
+                        <p id="biggest-purchase-name" class="merchant-name">—</p>
+                        <p id="biggest-purchase-amount" class="merchant-amount"></p>
+                    </div>
                 </div>
             </div>
 
@@ -69,15 +75,15 @@
             <div class="card totals-panel">
                 <div class="total-item">
                     <p class="total-label">Total Spending</p>
-                    <p class="total-value"><span class="currency">₾</span>128</p>
+                    <p class="total-value"><span class="currency">₾</span><span id="total-spending">—</span></p>
                 </div>
                 <div class="total-item">
                     <p class="total-label">Transaction count</p>
-                    <p class="total-value"><span class="currency">₾</span>128</p>
+                    <p class="total-value" id="transaction-count">—</p>
                 </div>
                 <div class="total-item">
                     <p class="total-label">Average Transaction</p>
-                    <p class="total-value"><span class="currency">₾</span>128</p>
+                    <p class="total-value"><span class="currency">₾</span><span id="avg-transaction">—</span></p>
                 </div>
             </div>
 

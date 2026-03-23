@@ -257,6 +257,70 @@ async function loadTopMerchants(paymentsId) {
     }
 }
 
+// ── Totals panel ───────────────────────────────────────────
+async function loadTotals(paymentsId) {
+    try {
+        const [spendingRes, countRes, meansRes] = await Promise.all([
+            fetch(`${API_BASE}/main-insights/total-spending?dataset_id=${paymentsId}`),
+            fetch(`${API_BASE}/main-insights/transaction-count?dataset_id=${paymentsId}`),
+            fetch(`${API_BASE}/main-insights/transaction-means?dataset_id=${paymentsId}`),
+        ]);
+
+        if (spendingRes.ok) {
+            const s = await spendingRes.json();
+            document.getElementById('total-spending').textContent = s.GEL.toFixed(2);
+        }
+        if (countRes.ok) {
+            const c = await countRes.json();
+            document.getElementById('transaction-count').textContent = c.count;
+        }
+        if (meansRes.ok) {
+            const m = await meansRes.json();
+            document.getElementById('avg-transaction').textContent = m.GEL.toFixed(2);
+        }
+    } catch (err) {
+        console.error('Failed to load totals:', err);
+    }
+}
+
+// ── Biggest Purchase ───────────────────────────────────────
+async function loadBiggestPurchase(paymentsId) {
+    try {
+        const res = await fetch(
+            `${API_BASE}/main-insights/biggest-spending?dataset_id=${paymentsId}`
+        );
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+        const top = records[0];
+        if (!top) return;
+
+        document.getElementById('biggest-purchase-name').textContent   = top.transaction_object;
+        document.getElementById('biggest-purchase-amount').textContent = `₾${top.GEL.toFixed(2)}`;
+    } catch (err) {
+        document.getElementById('biggest-purchase-name').textContent = 'Error loading';
+    }
+}
+
+// ── Top Merchant ───────────────────────────────────────────
+async function loadTopMerchant(paymentsId) {
+    try {
+        const res = await fetch(
+            `${API_BASE}/behaviour/spending-by-merchant?dataset_id=${paymentsId}`
+        );
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+        const top = records.find(r => r.GEL > 0);
+        if (!top) return;
+
+        document.getElementById('top-merchant-name').textContent   = top.transaction_object;
+        document.getElementById('top-merchant-amount').textContent = `₾${top.GEL.toFixed(2)}`;
+    } catch (err) {
+        document.getElementById('top-merchant-name').textContent = 'Error loading';
+    }
+}
+
 // ── Average Spending by Day of Week bar chart ──────────────
 async function loadAvgSpendingByDay(paymentsId) {
     const chartEl = document.getElementById('avg-spending-day-chart');
@@ -363,6 +427,9 @@ fileInput.addEventListener('change', async() => {
         loadExpenseBreakdown(uploadData.payments_id);
         loadSpendingOverTime(uploadData.payments_id);
         loadTopMerchants(uploadData.payments_id);
+        loadTopMerchant(uploadData.payments_id);
+        loadBiggestPurchase(uploadData.payments_id);
+        loadTotals(uploadData.payments_id);
         loadAvgSpendingByDay(uploadData.payments_id);
 
     } catch (err) {

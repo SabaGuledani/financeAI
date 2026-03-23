@@ -138,6 +138,28 @@ body {
   white-space: nowrap;
 }
 
+.merchant-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.merchant-name {
+  font-size: 28px;
+  font-weight: 400;
+  text-align: center;
+  color: #1a1a2e;
+  word-break: break-word;
+}
+
+.merchant-amount {
+  font-size: 20px;
+  color: #6c63ff;
+}
+
 .chart-placeholder {
   flex: 1;
   background: #f3f3fa;
@@ -161,6 +183,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow: hidden;
 }
 
 .totals-panel {
