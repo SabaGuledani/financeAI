@@ -257,6 +257,78 @@ async function loadTopMerchants(paymentsId) {
     }
 }
 
+// ── Merchant last transactions ─────────────────────────────
+async function loadMerchantLastTransactions(paymentsId) {
+    const emptyEl  = document.getElementById('merchant-last-empty');
+    const tableEl  = document.getElementById('merchant-last-table');
+    const tbodyEl  = document.getElementById('merchant-last-tbody');
+    const nameEl   = document.getElementById('merchant-last-name');
+
+    try {
+        const res = await fetch(
+            `${API_BASE}/behaviour/top-merchant-last-transactions?dataset_id=${paymentsId}`
+        );
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+        if (!records.length) {
+            emptyEl.textContent = 'No transactions found.';
+            return;
+        }
+
+        nameEl.textContent  = records[0].transaction_object;
+        emptyEl.style.display = 'none';
+        tableEl.style.display = 'table';
+
+        tbodyEl.innerHTML = records.map(r => {
+            const date = new Date(r['თარიღი']).toLocaleDateString('en-GB', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            });
+            return `<tr>
+                <td>${date}</td>
+                <td class="amount-cell">₾${r.GEL.toFixed(2)}</td>
+            </tr>`;
+        }).join('');
+
+    } catch (err) {
+        emptyEl.textContent = `Failed to load: ${err.message}`;
+    }
+}
+
+// ── Frequency card ─────────────────────────────────────────
+async function loadFrequency(paymentsId) {
+    try {
+        const [perDayRes, mostActiveRes] = await Promise.all([
+            fetch(`${API_BASE}/behaviour/transactions-per-day?dataset_id=${paymentsId}`),
+            fetch(`${API_BASE}/behaviour/most-active-day?dataset_id=${paymentsId}`),
+        ]);
+
+        if (perDayRes.ok) {
+            const records = await perDayRes.json();
+            // GEL column holds the count (it's a .count() result from the backend)
+            const counts = records.map(r => r.GEL);
+            const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
+            const max = Math.max(...counts);
+            document.getElementById('freq-avg-per-day').textContent  = avg.toFixed(1);
+            document.getElementById('freq-max-per-day').textContent  = max;
+        }
+
+        if (mostActiveRes.ok) {
+            const records = await mostActiveRes.json();
+            if (records.length) {
+                const raw  = records[0]['თარიღი'];           // "2025-07-26T00:00:00"
+                const date = new Date(raw);
+                const formatted = date.toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                });
+                document.getElementById('freq-most-active-day').textContent = formatted;
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load frequency data:', err);
+    }
+}
+
 // ── Totals panel ───────────────────────────────────────────
 async function loadTotals(paymentsId) {
     try {
@@ -430,6 +502,8 @@ fileInput.addEventListener('change', async() => {
         loadTopMerchant(uploadData.payments_id);
         loadBiggestPurchase(uploadData.payments_id);
         loadTotals(uploadData.payments_id);
+        loadFrequency(uploadData.payments_id);
+        loadMerchantLastTransactions(uploadData.payments_id);
         loadAvgSpendingByDay(uploadData.payments_id);
 
     } catch (err) {

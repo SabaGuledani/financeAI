@@ -109,7 +109,17 @@
             </div>
             <div class="card behavior-card">
                 <p class="card-title">Merchant last transactions</p>
-                <div class="chart-placeholder">List</div>
+                <p id="merchant-last-name" class="merchant-last-subtitle">—</p>
+                <div id="merchant-last-empty" class="chart-placeholder">Upload a file to see transactions</div>
+                <table id="merchant-last-table" class="merchant-last-table" style="display:none">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="merchant-last-tbody"></tbody>
+                </table>
             </div>
         </div>
 
@@ -120,9 +130,20 @@
                 <p id="avg-spending-day-empty" class="chart-placeholder">Upload a file to see average spending by day</p>
             </div>
             <div class="card frequency-card">
-                <p class="frequency-item">Frequency</p>
-                <p class="frequency-item">Transactions per day</p>
-                <p class="frequency-item">Most active day</p>
+                <div class="freq-item">
+                    <p class="freq-label">Frequency</p>
+                    <p class="freq-value" id="freq-avg-per-day">—</p>
+                    <p class="freq-sub">avg transactions / day</p>
+                </div>
+                <div class="freq-item">
+                    <p class="freq-label">Transactions per day</p>
+                    <p class="freq-value" id="freq-max-per-day">—</p>
+                    <p class="freq-sub">peak in a single day</p>
+                </div>
+                <div class="freq-item">
+                    <p class="freq-label">Most active day</p>
+                    <p class="freq-value freq-value--date" id="freq-most-active-day">—</p>
+                </div>
             </div>
         </div>
 

@@ -13,6 +13,11 @@ def get_transactions_per_day(df:pd.DataFrame):
 def get_most_active_day(df:pd.DataFrame):
     return get_transactions_per_day(df).head(1)
 
+def get_top_merchant_last_transactions(df:pd.DataFrame, n:int=5):
+    top_merchant = get_spending_by_merchant(df).index[0]
+    merchant_df = df[df["transaction_object"] == top_merchant]
+    return merchant_df.sort_values(by="თარიღი", ascending=False).head(n)[["თარიღი", "transaction_object", "GEL"]]
+
 def get_avg_spending_by_weekday(df:pd.DataFrame):
     df = df.copy()
     df["weekday"] = df["თარიღი"].dt.dayofweek  # 0=Monday, 6=Sunday

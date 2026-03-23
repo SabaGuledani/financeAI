@@ -6,6 +6,7 @@ from app.services.behaviour_service import (
     get_transactions_per_day,
     get_most_active_day,
     get_avg_spending_by_weekday,
+    get_top_merchant_last_transactions,
 )
 
 router = APIRouter()
@@ -42,6 +43,17 @@ def most_active_day(dataset_id: str = Query(..., description="ID returned by /up
 
     result = get_most_active_day(df)
     return result.reset_index().to_dict(orient="records")
+
+
+@router.get("/behaviour/top-merchant-last-transactions")
+def top_merchant_last_transactions(dataset_id: str = Query(..., description="ID returned by /upload")):
+    df = dataset_store.get(dataset_id)
+
+    if df is None:
+        raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
+
+    result = get_top_merchant_last_transactions(df)
+    return result.to_dict(orient="records")
 
 
 @router.get("/behaviour/avg-spending-by-weekday")
