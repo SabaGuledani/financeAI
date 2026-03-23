@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes_upload import router as upload_router
 from app.api.routes_transactions import router as transactions_router
@@ -15,6 +16,13 @@ load_dotenv(Path(__file__).parent.parent.parent / ".env")
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 app = FastAPI(title="FinanceAI API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(upload_router)
 app.include_router(transactions_router)

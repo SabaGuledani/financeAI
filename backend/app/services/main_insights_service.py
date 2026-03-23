@@ -8,6 +8,7 @@ def get_spending_by_month(df:pd.DataFrame):
     df = df.groupby(["month","year"])[["GEL","USD","EUR","GBP"]].sum()
     return df
 def get_spending_by_category(df:pd.DataFrame):
+    print(df.columns)
     df = df.groupby(["category"])[["GEL","USD","EUR","GBP"]].sum().sort_values(by="GEL", ascending=False)
     return df
 

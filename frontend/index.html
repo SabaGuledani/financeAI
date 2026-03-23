@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.css" />
 </head>
 
 <body>
@@ -28,7 +29,11 @@
 
         <!-- Upload -->
         <div>
-            <button class="upload-btn">Upload file</button>
+            <input type="file" id="file-input" accept=".xlsx,.xls" hidden />
+            <button class="upload-btn" id="upload-btn" onclick="document.getElementById('file-input').click()">
+                Upload file
+            </button>
+            <p class="upload-status" id="upload-status"></p>
         </div>
 
         <!-- ── MAIN INSIGHTS ─────────────────────────────── -->
@@ -41,7 +46,11 @@
             <!-- Expense Breakdown -->
             <div class="card expense-breakdown">
                 <p class="card-title">Expense Breakdown</p>
-                <div class="chart-placeholder">Pie / Donut chart</div>
+                <div class="expense-breakdown-body">
+                    <div id="expense-breakdown-chart" class="ct-chart ct-perfect-fourth"></div>
+                    <ul id="expense-breakdown-legend" class="pie-legend"></ul>
+                </div>
+                <p id="expense-breakdown-empty" class="chart-placeholder">Upload a file to see the breakdown</p>
             </div>
 
             <!-- Top Merchant + Biggest Purchase -->
@@ -181,6 +190,9 @@
         </div>
 
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
+    <script src="main.js"></script>
 
 </body>
 
