@@ -1,5 +1,6 @@
 
 import pandas as pd
+
 def get_spending_by_merchant(df:pd.DataFrame):
     df = df.groupby(["transaction_object"])[["GEL","USD","EUR","GBP"]].sum().sort_values(by="GEL", ascending=False)
     return df
