@@ -31,7 +31,7 @@ def parse_categorization_response(response):
         categories_df = pd.DataFrame(response_text["results"])
     except Exception as e:
         print(f"Error parsing categorization response: {e}")
-        return pd.DataFrame()
+        return None
 
     return categories_df
 

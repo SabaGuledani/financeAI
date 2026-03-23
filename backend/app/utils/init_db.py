@@ -1,6 +1,5 @@
 from app.database.db import engine, Base
-from app.models.transaction_model import Transaction
-from app.models.payment_model import Payment
+from app.models.categories_model import Categories
 
 def create_db():
     try:
