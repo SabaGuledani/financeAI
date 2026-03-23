@@ -1,0 +1,351 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f3f3fa;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #000;
+  min-height: 100vh;
+}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar {
+  background-color: #f3f3fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 60px 28px 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 28px;
+  font-weight: 400;
+  text-decoration: none;
+  color: #000;
+}
+
+.navbar-brand img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.navbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 32px;
+}
+
+.navbar-title img {
+  width: 28px;
+  height: 28px;
+}
+
+/* ─── MAIN LAYOUT ────────────────────────────────────── */
+.page {
+  padding: 32px 60px 80px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ─── CARD BASE ──────────────────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 24px;
+}
+
+/* ─── UPLOAD ─────────────────────────────────────────── */
+.upload-btn {
+  background: #fff;
+  border-radius: 24px;
+  width: 463px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 28px;
+  cursor: pointer;
+  border: 2px dashed #ccc;
+  transition: border-color 0.2s, background 0.2s;
+  color: #000;
+}
+
+.upload-btn:hover {
+  border-color: #999;
+  background: #fafafe;
+}
+
+/* ─── SECTION HEADER ─────────────────────────────────── */
+.section-header {
+  font-size: 48px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.section-sub {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+/* ─── MAIN INSIGHTS ──────────────────────────────────── */
+.main-insights-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.expense-breakdown {
+  padding: 32px 36px;
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.chart-placeholder {
+  flex: 1;
+  background: #f3f3fa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.main-insights-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top-merchant, .biggest-purchase {
+  height: 278px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.totals-panel {
+  height: 580px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+}
+
+.total-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 0;
+}
+
+.total-item:last-child {
+  border-bottom: none;
+}
+
+.total-label {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.total-value {
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.currency {
+  font-family: 'Calibri', sans-serif;
+}
+
+/* ─── SPENDING OVER TIME ─────────────────────────────── */
+.spending-over-time {
+  padding: 28px 32px;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── BEHAVIOR SECTION ───────────────────────────────── */
+.behavior-label {
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.behavior-grid-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.behavior-grid-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.behavior-card {
+  height: 460px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.frequency-card {
+  height: 460px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 56px;
+  text-align: center;
+}
+
+.frequency-item {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+/* ─── OTHER INSIGHTS ─────────────────────────────────── */
+.other-insights-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.other-insights-row {
+  height: 420px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── SMART INSIGHTS ─────────────────────────────────── */
+.smart-insights {
+  padding: 36px 48px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.smart-insights-title {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.smart-insights-text {
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* ─── TRANSACTION TABLE ──────────────────────────────── */
+.transaction-table-card {
+  padding: 32px 36px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.transaction-table-title {
+  font-size: 24px;
+  font-weight: 400;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 400;
+  border-bottom: 2px solid #f0f0f0;
+  font-size: 15px;
+  color: #555;
+}
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #fafafe;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .main-insights-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .totals-panel {
+    grid-column: 1 / -1;
+    height: auto;
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 768px) {
+  .page { padding: 20px 16px 60px; }
+  .navbar { padding: 16px 20px; }
+  .navbar-brand { font-size: 20px; }
+  .section-header { font-size: 32px; }
+  .upload-btn { width: 100%; font-size: 20px; }
+  .main-insights-grid,
+  .behavior-grid-top,
+  .behavior-grid-bottom,
+  .other-insights-grid {
+    grid-template-columns: 1fr;
+  }
+  .expense-breakdown,
+  .behavior-card,
+  .other-insights-row,
+  .frequency-card { height: auto; min-height: 240px; }
+}

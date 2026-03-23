@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinanceAI Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ─── NAVBAR ─────────────────────────────────────── -->
+    <header class="navbar">
+        <a class="navbar-brand" href="#">
+            <img src="http://localhost:3845/assets/e9785cd20ace7d96ff269d43c2c01d021a559db8.png" alt="FinanceAI logo" /> FinanceAI
+        </a>
+        <div class="navbar-title">
+            <img src="http://localhost:3845/assets/686ac665fef0c94a3fd30a7189abc446892eca9c.png" alt="dashboard icon" /> Dashboard
+        </div>
+    </header>
+
+    <!-- ─── PAGE CONTENT ──────────────────────────────── -->
+    <main class="page">
+
+        <!-- Upload -->
+        <div>
+            <button class="upload-btn">Upload file</button>
+        </div>
+
+        <!-- ── MAIN INSIGHTS ─────────────────────────────── -->
+        <div>
+            <p class="section-header">Main Insights</p>
+        </div>
+
+        <div class="main-insights-grid">
+
+            <!-- Expense Breakdown -->
+            <div class="card expense-breakdown">
+                <p class="card-title">Expense Breakdown</p>
+                <div class="chart-placeholder">Pie / Donut chart</div>
+            </div>
+
+            <!-- Top Merchant + Biggest Purchase -->
+            <div class="main-insights-mid">
+                <div class="card top-merchant">
+                    <p class="card-title">Top Merchant</p>
+                    <div class="chart-placeholder">Top merchant data</div>
+                </div>
+                <div class="card biggest-purchase">
+                    <p class="card-title">Biggest Purchase</p>
+                    <div class="chart-placeholder">Purchase data</div>
+                </div>
+            </div>
+
+            <!-- Totals -->
+            <div class="card totals-panel">
+                <div class="total-item">
+                    <p class="total-label">Total Spending</p>
+                    <p class="total-value"><span class="currency">₾</span>128</p>
+                </div>
+                <div class="total-item">
+                    <p class="total-label">Transaction count</p>
+                    <p class="total-value"><span class="currency">₾</span>128</p>
+                </div>
+                <div class="total-item">
+                    <p class="total-label">Average Transaction</p>
+                    <p class="total-value"><span class="currency">₾</span>128</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SPENDING OVER TIME ─────────────────────────── -->
+        <div class="card spending-over-time">
+            <p class="card-title">Spending Over Time</p>
+            <div class="chart-placeholder">Line chart</div>
+        </div>
+
+        <!-- ── BEHAVIOR ──────────────────────────────────── -->
+        <div>
+            <p class="behavior-label">BEHAVIOR</p>
+        </div>
+
+        <div class="behavior-grid-top">
+            <div class="card behavior-card">
+                <p class="card-title">Top Merchants</p>
+                <div class="chart-placeholder">Bar chart</div>
+            </div>
+            <div class="card behavior-card">
+                <p class="card-title">Merchant last transactions</p>
+                <div class="chart-placeholder">List</div>
+            </div>
+        </div>
+
+        <div class="behavior-grid-bottom">
+            <div class="card behavior-card">
+                <p class="card-title">Average spending by day</p>
+                <div class="chart-placeholder">Bar chart</div>
+            </div>
+            <div class="card frequency-card">
+                <p class="frequency-item">Frequency</p>
+                <p class="frequency-item">Transactions per day</p>
+                <p class="frequency-item">Most active day</p>
+            </div>
+        </div>
+
+        <!-- ── OTHER INSIGHTS ────────────────────────────── -->
+        <div>
+            <p class="section-sub">Other Insights</p>
+        </div>
+
+        <div class="other-insights-grid">
+            <div class="card other-insights-row">
+                <div class="chart-placeholder" style="flex:1;">Chart A</div>
+            </div>
+            <div class="card other-insights-row">
+                <div class="chart-placeholder" style="flex:1;">Chart B</div>
+            </div>
+        </div>
+
+        <!-- ── SMART INSIGHTS ────────────────────────────── -->
+        <div class="card smart-insights">
+            <p class="smart-insights-title">Smart insights</p>
+            <p class="smart-insights-text">
+                You spent $720 in the first 10 days of this month.<br /> That's 65% of your usual monthly spending.
+            </p>
+            <p class="smart-insights-text">
+                Glovo accounts for 18% of your total spending this month.
+            </p>
+        </div>
+
+        <!-- ── TRANSACTION TABLE ─────────────────────────── -->
+        <div class="card transaction-table-card">
+            <p class="transaction-table-title">Transaction Table</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Merchant</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-03-01</td>
+                        <td>Glovo</td>
+                        <td>Food & Drink</td>
+                        <td>₾24.50</td>
+                    </tr>
+                    <tr>
+                        <td>2024-03-03</td>
+                        <td>Amazon</td>
+                        <td>Shopping</td>
+                        <td>₾89.99</td>
+                    </tr>
+                    <tr>
+                        <td>2024-03-05</td>
+                        <td>Netflix</td>
+                        <td>Entertainment</td>
+                        <td>₾13.99</td>
+                    </tr>
+                    <tr>
+                        <td>2024-03-07</td>
+                        <td>Wolt</td>
+                        <td>Food & Drink</td>
+                        <td>₾18.30</td>
+                    </tr>
+                    <tr>
+                        <td>2024-03-10</td>
+                        <td>Bolt</td>
+                        <td>Transport</td>
+                        <td>₾7.80</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
