@@ -170,6 +170,164 @@ async function loadSpendingOverTime(transactionsId) {
     }
 }
 
+// ── Top Merchants bar chart ────────────────────────────────
+const barTooltip = document.createElement('div');
+barTooltip.className = 'line-tooltip';
+barTooltip.style.display = 'none';
+document.body.appendChild(barTooltip);
+
+function moveBarTooltip(e) {
+    barTooltip.style.left = (e.pageX + 16) + 'px';
+    barTooltip.style.top = (e.pageY - 56) + 'px';
+}
+
+async function loadTopMerchants(paymentsId) {
+    const chartEl = document.getElementById('top-merchants-chart');
+    const emptyEl = document.getElementById('top-merchants-empty');
+
+    try {
+        const res = await fetch(
+            `${API_BASE}/behaviour/spending-by-merchant?dataset_id=${paymentsId}`
+        );
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+
+        const data = records.filter(r => r.GEL > 0).slice(0, 10);
+        if (!data.length) {
+            emptyEl.textContent = 'No merchant data found.';
+            return;
+        }
+
+        // Chartist horizontal bars render bottom-to-top, so reverse for top-down display
+        const reversed = [...data].reverse();
+        const labels = reversed.map(r => r.transaction_object);
+        const series = [reversed.map(r => parseFloat(r.GEL.toFixed(2)))];
+
+        emptyEl.style.display = 'none';
+        chartEl.style.display = 'block';
+
+        const chart = new Chartist.Bar('#top-merchants-chart', { labels, series }, {
+            seriesBarDistance: 10,
+            reverseData: false,
+            horizontalBars: true,
+            axisY: {
+                offset: 108,
+                labelOffset: { x: -10, y: 0 },
+                labelInterpolationFnc: v => v.length > 12 ? v.slice(0, 11) + '…' : v,
+            },
+            axisX: {
+                labelInterpolationFnc: v => `₾${Math.round(v)}`,
+                onlyInteger: true,
+            },
+            chartPadding: { top: 8, right: 24, bottom: 8, left: 0 },
+        });
+
+        // Stamp real data onto each bar via the draw event
+        chart.on('draw', (ctx) => {
+            if (ctx.type === 'bar') {
+                const item = reversed[ctx.index];
+                ctx.element._node.setAttribute('data-merchant', item.transaction_object);
+                ctx.element._node.setAttribute('data-value', item.GEL.toFixed(2));
+            }
+        });
+
+        chart.on('created', () => {
+            chartEl.querySelectorAll('.ct-bar').forEach((bar) => {
+                const fresh = bar.cloneNode(true);
+                bar.parentNode.replaceChild(fresh, bar);
+
+                fresh.addEventListener('mouseenter', (e) => {
+                    barTooltip.innerHTML = `
+                        <span class="tt-month">${fresh.getAttribute('data-merchant')}</span>
+                        <span class="tt-value">₾${fresh.getAttribute('data-value')}</span>
+                    `;
+                    barTooltip.style.display = 'flex';
+                    moveBarTooltip(e);
+                });
+                fresh.addEventListener('mousemove', moveBarTooltip);
+                fresh.addEventListener('mouseleave', () => {
+                    barTooltip.style.display = 'none';
+                });
+            });
+        });
+
+    } catch (err) {
+        emptyEl.textContent = `Failed to load chart: ${err.message}`;
+    }
+}
+
+// ── Average Spending by Day of Week bar chart ──────────────
+async function loadAvgSpendingByDay(paymentsId) {
+    const chartEl = document.getElementById('avg-spending-day-chart');
+    const emptyEl = document.getElementById('avg-spending-day-empty');
+
+    try {
+        const res = await fetch(
+            `${API_BASE}/behaviour/avg-spending-by-weekday?dataset_id=${paymentsId}`
+        );
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+
+        if (!records.length) {
+            emptyEl.textContent = 'No data found.';
+            return;
+        }
+
+        // records are already sorted Mon–Sun (weekday 0–6) from backend
+        const labels = records.map(r => r.weekday_name.slice(0, 3)); // Mon, Tue…
+        const series = [records.map(r => parseFloat(r.GEL.toFixed(2)))];
+
+        emptyEl.style.display = 'none';
+        chartEl.style.display = 'block';
+
+        const chart = new Chartist.Bar('#avg-spending-day-chart', { labels, series }, {
+            fullWidth: true,
+            chartPadding: { top: 20, right: 16, bottom: 16, left: 8 },
+            axisY: {
+                labelInterpolationFnc: v => `₾${Math.round(v)}`,
+                onlyInteger: true,
+            },
+            axisX: {
+                offset: 42,
+                labelOffset: { x: 0, y: 10 },
+            },
+        });
+
+        // Stamp actual values onto each bar
+        chart.on('draw', (ctx) => {
+            if (ctx.type === 'bar') {
+                ctx.element._node.setAttribute('data-label', records[ctx.index].weekday_name);
+                ctx.element._node.setAttribute('data-value', records[ctx.index].GEL.toFixed(2));
+            }
+        });
+
+        chart.on('created', () => {
+            chartEl.querySelectorAll('.ct-bar').forEach((bar) => {
+                const fresh = bar.cloneNode(true);
+                bar.parentNode.replaceChild(fresh, bar);
+
+                fresh.addEventListener('mouseenter', (e) => {
+                    barTooltip.innerHTML = `
+                        <span class="tt-month">${fresh.getAttribute('data-label')}</span>
+                        <span class="tt-value">₾${fresh.getAttribute('data-value')}</span>
+                    `;
+                    barTooltip.style.display = 'flex';
+                    moveBarTooltip(e);
+                });
+                fresh.addEventListener('mousemove', moveBarTooltip);
+                fresh.addEventListener('mouseleave', () => {
+                    barTooltip.style.display = 'none';
+                });
+            });
+        });
+
+    } catch (err) {
+        emptyEl.textContent = `Failed to load chart: ${err.message}`;
+    }
+}
+
 // ── Upload ─────────────────────────────────────────────────
 fileInput.addEventListener('change', async() => {
     const file = fileInput.files[0];
@@ -204,6 +362,8 @@ fileInput.addEventListener('change', async() => {
 
         loadExpenseBreakdown(uploadData.payments_id);
         loadSpendingOverTime(uploadData.payments_id);
+        loadTopMerchants(uploadData.payments_id);
+        loadAvgSpendingByDay(uploadData.payments_id);
 
     } catch (err) {
         statusEl.className = 'upload-status upload-status--error';

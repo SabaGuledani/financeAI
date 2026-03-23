@@ -363,6 +363,77 @@ body {
   color: #a89fff;
 }
 
+/* ─── TOP MERCHANTS BAR CHART ────────────────────────── */
+#top-merchants-chart {
+  display: none;
+  flex: 1;
+  min-height: 0;
+}
+
+#top-merchants-chart .ct-bar {
+  stroke: #6c63ff;
+  stroke-width: 18px;
+  stroke-linecap: round;
+  cursor: pointer;
+  transition: stroke 0.15s;
+}
+
+#top-merchants-chart .ct-bar:hover {
+  stroke: #4b44cc;
+}
+
+#top-merchants-chart .ct-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  fill: #555;
+  color: #555;
+}
+
+#top-merchants-chart .ct-grid {
+  stroke: #e8e8f0;
+  stroke-dasharray: 4px 4px;
+}
+
+/* ─── AVG SPENDING BY DAY BAR CHART ─────────────────── */
+#avg-spending-day-chart {
+  display: none;
+  flex: 1;
+  min-height: 0;
+}
+
+#avg-spending-day-chart .ct-bar {
+  stroke: #6c63ff;
+  stroke-width: 28px;
+  stroke-linecap: round;
+  cursor: pointer;
+  transition: stroke 0.15s;
+}
+
+#avg-spending-day-chart .ct-bar:hover {
+  stroke: #4b44cc;
+}
+
+#avg-spending-day-chart .ct-label.ct-horizontal {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  fill: #444;
+  color: #444;
+  letter-spacing: 0.04em;
+}
+
+#avg-spending-day-chart .ct-label.ct-vertical {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  fill: #888;
+  color: #888;
+}
+
+#avg-spending-day-chart .ct-grid {
+  stroke: #e8e8f0;
+  stroke-dasharray: 4px 4px;
+}
+
 /* ─── BEHAVIOR SECTION ───────────────────────────────── */
 .behavior-label {
   font-size: 28px;
@@ -379,7 +450,7 @@ body {
 
 .behavior-grid-bottom {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 20px;
 }
 
@@ -389,6 +460,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow: hidden;
 }
 
 .frequency-card {
