@@ -466,6 +466,122 @@ async function loadAvgSpendingByDay(paymentsId) {
     }
 }
 
+// ── Transactions Table ─────────────────────────────────────
+let _allTransactions = [];
+
+function applyTransactionFilters() {
+    if (!_allTransactions.length) return;
+
+    const query     = document.getElementById('transactions-search').value.trim().toLowerCase();
+    const dateFrom  = document.getElementById('filter-date-from').value;   // 'YYYY-MM-DD' or ''
+    const dateTo    = document.getElementById('filter-date-to').value;
+    const amountMin = parseFloat(document.getElementById('filter-amount-min').value);
+    const amountMax = parseFloat(document.getElementById('filter-amount-max').value);
+
+    const fromMs = dateFrom ? new Date(dateFrom).getTime() : -Infinity;
+    const toMs   = dateTo   ? new Date(dateTo + 'T23:59:59').getTime() : Infinity;
+
+    const filtered = _allTransactions.filter(r => {
+        const rowMs = r['თარიღი'] ? new Date(r['თარიღი']).getTime() : 0;
+        const gel   = typeof r.GEL === 'number' ? r.GEL : 0;
+
+        if (query && !(
+            (r.transaction_object || '').toLowerCase().includes(query) ||
+            (r.category || '').toLowerCase().includes(query)
+        )) return false;
+
+        if (rowMs < fromMs || rowMs > toMs) return false;
+        if (!isNaN(amountMin) && gel < amountMin) return false;
+        if (!isNaN(amountMax) && gel > amountMax) return false;
+
+        return true;
+    });
+
+    renderTransactionsTable(filtered);
+}
+
+function renderTransactionsTable(rows) {
+    const tbody   = document.getElementById('transactions-tbody');
+    const countEl = document.getElementById('transactions-count');
+
+    if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#999;padding:24px;">No matching payments</td></tr>`;
+        countEl.textContent = '0 payments';
+        return;
+    }
+
+    tbody.innerHTML = rows.map(r => {
+        const raw  = r['თარიღი'];
+        const date = raw
+            ? new Date(raw).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+            : '—';
+        const merchant = r.transaction_object || '—';
+        const category = r.category || '—';
+        const amount   = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
+        return `<tr>
+            <td>${date}</td>
+            <td>${merchant}</td>
+            <td>${category}</td>
+            <td class="amount-cell">₾${amount}</td>
+        </tr>`;
+    }).join('');
+
+    countEl.textContent = `${rows.length} payment${rows.length !== 1 ? 's' : ''}`;
+}
+
+async function loadTransactionsTable(paymentsId) {
+    const emptyEl   = document.getElementById('transactions-empty');
+    const wrapperEl = document.getElementById('transactions-wrapper');
+    const countEl   = document.getElementById('transactions-count');
+
+    try {
+        const res = await fetch(`${API_BASE}/transactions?dataset_id=${paymentsId}`);
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+        records.sort((a, b) => new Date(b['თარიღი']) - new Date(a['თარიღი']));
+        _allTransactions = records;
+
+        if (!records.length) {
+            emptyEl.textContent = 'No payments found in the uploaded file.';
+            return;
+        }
+
+        // Pre-fill date range bounds from actual data
+        const dates = records.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
+        if (dates.length) {
+            document.getElementById('filter-date-from').value = dates[0];
+            document.getElementById('filter-date-to').value   = dates[dates.length - 1];
+        }
+
+        emptyEl.style.display = 'none';
+        wrapperEl.style.display = 'block';
+        countEl.style.display = 'block';
+
+        renderTransactionsTable(records);
+
+    } catch (err) {
+        emptyEl.textContent = `Failed to load payments: ${err.message}`;
+    }
+}
+
+['transactions-search', 'filter-date-from', 'filter-date-to', 'filter-amount-min', 'filter-amount-max']
+    .forEach(id => document.getElementById(id).addEventListener('input', applyTransactionFilters));
+
+document.getElementById('filter-reset').addEventListener('click', () => {
+    document.getElementById('transactions-search').value = '';
+    document.getElementById('filter-amount-min').value  = '';
+    document.getElementById('filter-amount-max').value  = '';
+
+    // Re-set dates to full data range
+    const dates = _allTransactions.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
+    if (dates.length) {
+        document.getElementById('filter-date-from').value = dates[0];
+        document.getElementById('filter-date-to').value   = dates[dates.length - 1];
+    }
+    renderTransactionsTable(_allTransactions);
+});
+
 // ── Upload ─────────────────────────────────────────────────
 fileInput.addEventListener('change', async() => {
     const file = fileInput.files[0];
@@ -507,6 +623,7 @@ fileInput.addEventListener('change', async() => {
         loadFrequency(uploadData.payments_id);
         loadMerchantLastTransactions(uploadData.payments_id);
         loadAvgSpendingByDay(uploadData.payments_id);
+        loadTransactionsTable(uploadData.payments_id);
 
     } catch (err) {
         statusEl.className = 'upload-status upload-status--error';

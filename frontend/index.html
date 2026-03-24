@@ -174,49 +174,47 @@
 
         <!-- ── TRANSACTION TABLE ─────────────────────────── -->
         <div class="card transaction-table-card">
-            <p class="transaction-table-title">Transaction Table</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Merchant</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2024-03-01</td>
-                        <td>Glovo</td>
-                        <td>Food & Drink</td>
-                        <td>₾24.50</td>
-                    </tr>
-                    <tr>
-                        <td>2024-03-03</td>
-                        <td>Amazon</td>
-                        <td>Shopping</td>
-                        <td>₾89.99</td>
-                    </tr>
-                    <tr>
-                        <td>2024-03-05</td>
-                        <td>Netflix</td>
-                        <td>Entertainment</td>
-                        <td>₾13.99</td>
-                    </tr>
-                    <tr>
-                        <td>2024-03-07</td>
-                        <td>Wolt</td>
-                        <td>Food & Drink</td>
-                        <td>₾18.30</td>
-                    </tr>
-                    <tr>
-                        <td>2024-03-10</td>
-                        <td>Bolt</td>
-                        <td>Transport</td>
-                        <td>₾7.80</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="transaction-table-header">
+                <p class="transaction-table-title">All Payments</p>
+                <input type="text" id="transactions-search" class="transactions-search" placeholder="Search merchant or category…" />
+            </div>
+
+            <!-- Filter bar -->
+            <div class="transactions-filters">
+                <div class="filter-group">
+                    <label class="filter-label">From</label>
+                    <input type="date" id="filter-date-from" class="filter-input" />
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">To</label>
+                    <input type="date" id="filter-date-to" class="filter-input" />
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Min ₾</label>
+                    <input type="number" id="filter-amount-min" class="filter-input filter-input--short" min="0" placeholder="0" />
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Max ₾</label>
+                    <input type="number" id="filter-amount-max" class="filter-input filter-input--short" min="0" placeholder="∞" />
+                </div>
+                <button id="filter-reset" class="filter-reset-btn">Reset</button>
+            </div>
+
+            <p id="transactions-empty" class="chart-placeholder">Upload a file to see all payments</p>
+            <div id="transactions-wrapper" class="transactions-wrapper" style="display:none">
+                <table id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Merchant</th>
+                            <th>Category</th>
+                            <th class="amount-col">Amount (₾)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-tbody"></tbody>
+                </table>
+            </div>
+            <p id="transactions-count" class="transactions-count" style="display:none"></p>
         </div>
 
     </main>
