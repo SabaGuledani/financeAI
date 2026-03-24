@@ -639,6 +639,21 @@ document.getElementById('filter-reset').addEventListener('click', () => {
     renderTransactionsTable(sortRows(_allTransactions));
 });
 
+// ── Spending Pace Warning ──────────────────────────────────
+async function loadSpentSoFarWarning(paymentsId) {
+    const card = document.getElementById('spending-warning-card');
+    const textEl = document.getElementById('spending-warning-text');
+    try {
+        const res = await fetch(`${API_BASE}/main-insights/spent-so-far-warning?dataset_id=${paymentsId}`);
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const data = await res.json();
+        textEl.textContent = data.message;
+        card.style.display = 'block';
+    } catch (err) {
+        card.style.display = 'none';
+    }
+}
+
 // ── Upload ─────────────────────────────────────────────────
 fileInput.addEventListener('change', async() => {
     const file = fileInput.files[0];
@@ -672,6 +687,7 @@ fileInput.addEventListener('change', async() => {
         uploadBtn.textContent = file.name;
 
         loadExpenseBreakdown(uploadData.payments_id);
+        loadSpentSoFarWarning(uploadData.payments_id);
         loadSpendingOverTime(uploadData.payments_id);
         loadTopMerchants(uploadData.payments_id);
         loadTopMerchant(uploadData.payments_id);

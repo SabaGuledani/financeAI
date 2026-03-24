@@ -9,6 +9,7 @@ from app.services.main_insights_service import (
     get_transaction_medians,
     get_biggest_spending,
     get_transaction_count,
+    get_spent_so_far_warning,
 )
 
 router = APIRouter()
@@ -74,3 +75,14 @@ def transaction_count(dataset_id: str = Query(..., description="ID returned by /
     if df is None:
         raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
     return {"count": get_transaction_count(df)}
+
+
+@router.get("/main-insights/spent-so-far-warning")
+def spent_so_far_warning(
+    dataset_id: str = Query(..., description="ID returned by /upload"),
+    currency: str = Query("GEL", description="Currency column (GEL, USD, EUR, GBP)"),
+):
+    df = dataset_store.get(dataset_id)
+    if df is None:
+        raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
+    return {"message": get_spent_so_far_warning(df, currency=currency)}

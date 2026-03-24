@@ -330,6 +330,20 @@ body {
 }
 
 
+/* ─── SPENDING PACE WARNING ─────────────────────────── */
+
+.spending-warning {
+    padding: 16px 24px;
+    font-size: 0.9rem;
+    color: var(--text-secondary, #555);
+    border-left: 4px solid #455e91;
+}
+
+.spending-warning p {
+    margin: 0;
+    line-height: 1.5;
+}
+
 /* ─── SPENDING OVER TIME ─────────────────────────────── */
 
 .spending-over-time {
