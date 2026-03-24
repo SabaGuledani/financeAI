@@ -34,9 +34,9 @@ async function loadExpenseBreakdown(paymentsId) {
         const rest = positive.slice(5);
         const othersTotal = rest.reduce((sum, r) => sum + r.GEL, 0);
 
-        const data = othersTotal > 0
-            ? [...top5, { category: 'Others', GEL: othersTotal }]
-            : top5;
+        const data = othersTotal > 0 ?
+            [...top5, { category: 'Others', GEL: othersTotal }] :
+            top5;
 
         emptyEl.style.display = 'none';
         chartEl.style.display = 'block';
@@ -261,10 +261,10 @@ async function loadTopMerchants(paymentsId) {
 
 // ── Merchant last transactions ─────────────────────────────
 async function loadMerchantLastTransactions(paymentsId) {
-    const emptyEl  = document.getElementById('merchant-last-empty');
-    const tableEl  = document.getElementById('merchant-last-table');
-    const tbodyEl  = document.getElementById('merchant-last-tbody');
-    const nameEl   = document.getElementById('merchant-last-name');
+    const emptyEl = document.getElementById('merchant-last-empty');
+    const tableEl = document.getElementById('merchant-last-table');
+    const tbodyEl = document.getElementById('merchant-last-tbody');
+    const nameEl = document.getElementById('merchant-last-name');
 
     try {
         const res = await fetch(
@@ -278,13 +278,15 @@ async function loadMerchantLastTransactions(paymentsId) {
             return;
         }
 
-        nameEl.textContent  = records[0].transaction_object;
+        nameEl.textContent = records[0].transaction_object;
         emptyEl.style.display = 'none';
         tableEl.style.display = 'table';
 
         tbodyEl.innerHTML = records.map(r => {
             const date = new Date(r['თარიღი']).toLocaleDateString('en-GB', {
-                day: 'numeric', month: 'short', year: 'numeric'
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
             });
             return `<tr>
                 <td>${date}</td>
@@ -311,17 +313,19 @@ async function loadFrequency(paymentsId) {
             const counts = records.map(r => r.GEL);
             const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
             const max = Math.max(...counts);
-            document.getElementById('freq-avg-per-day').textContent  = avg.toFixed(1);
-            document.getElementById('freq-max-per-day').textContent  = max;
+            document.getElementById('freq-avg-per-day').textContent = avg.toFixed(1);
+            document.getElementById('freq-max-per-day').textContent = max;
         }
 
         if (mostActiveRes.ok) {
             const records = await mostActiveRes.json();
             if (records.length) {
-                const raw  = records[0]['თარიღი'];           // "2025-07-26T00:00:00"
+                const raw = records[0]['თარიღი']; // "2025-07-26T00:00:00"
                 const date = new Date(raw);
                 const formatted = date.toLocaleDateString('en-GB', {
-                    day: 'numeric', month: 'short', year: 'numeric'
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
                 });
                 document.getElementById('freq-most-active-day').textContent = formatted;
             }
@@ -369,7 +373,7 @@ async function loadBiggestPurchase(paymentsId) {
         const top = records[0];
         if (!top) return;
 
-        document.getElementById('biggest-purchase-name').textContent   = top.transaction_object;
+        document.getElementById('biggest-purchase-name').textContent = top.transaction_object;
         document.getElementById('biggest-purchase-amount').textContent = `₾${top.GEL.toFixed(2)}`;
     } catch (err) {
         document.getElementById('biggest-purchase-name').textContent = 'Error loading';
@@ -388,7 +392,7 @@ async function loadTopMerchant(paymentsId) {
         const top = records.find(r => r.GEL > 0);
         if (!top) return;
 
-        document.getElementById('top-merchant-name').textContent   = top.transaction_object;
+        document.getElementById('top-merchant-name').textContent = top.transaction_object;
         document.getElementById('top-merchant-amount').textContent = `₾${top.GEL.toFixed(2)}`;
     } catch (err) {
         document.getElementById('top-merchant-name').textContent = 'Error loading';
@@ -468,8 +472,8 @@ async function loadAvgSpendingByDay(paymentsId, category = 'all') {
 
 // ── Transactions Table ─────────────────────────────────────
 let _allTransactions = [];
-let _sortCol = 'date';   // 'date' | 'amount'
-let _sortDir = 'desc';   // 'asc'  | 'desc'
+let _sortCol = 'date'; // 'date' | 'amount'
+let _sortDir = 'desc'; // 'asc'  | 'desc'
 
 function sortRows(rows) {
     return [...rows].sort((a, b) => {
@@ -487,7 +491,7 @@ function sortRows(rows) {
 
 function updateSortHeaders() {
     ['date', 'amount'].forEach(col => {
-        const th    = document.getElementById(`th-${col}`);
+        const th = document.getElementById(`th-${col}`);
         const arrow = th.querySelector('.sort-arrow');
         if (col === _sortCol) {
             th.classList.add('sort-active');
@@ -502,24 +506,24 @@ function updateSortHeaders() {
 function applyTransactionFilters() {
     if (!_allTransactions.length) return;
 
-    const query      = document.getElementById('transactions-search').value.trim().toLowerCase();
-    const dateFrom   = document.getElementById('filter-date-from').value;
-    const dateTo     = document.getElementById('filter-date-to').value;
-    const merchant   = document.getElementById('filter-merchant').value;
-    const amountMin  = parseFloat(document.getElementById('filter-amount-min').value);
-    const amountMax  = parseFloat(document.getElementById('filter-amount-max').value);
+    const query = document.getElementById('transactions-search').value.trim().toLowerCase();
+    const dateFrom = document.getElementById('filter-date-from').value;
+    const dateTo = document.getElementById('filter-date-to').value;
+    const merchant = document.getElementById('filter-merchant').value;
+    const amountMin = parseFloat(document.getElementById('filter-amount-min').value);
+    const amountMax = parseFloat(document.getElementById('filter-amount-max').value);
 
     const fromMs = dateFrom ? new Date(dateFrom).getTime() : -Infinity;
-    const toMs   = dateTo   ? new Date(dateTo + 'T23:59:59').getTime() : Infinity;
+    const toMs = dateTo ? new Date(dateTo + 'T23:59:59').getTime() : Infinity;
 
     const filtered = _allTransactions.filter(r => {
         const rowMs = r['თარიღი'] ? new Date(r['თარიღი']).getTime() : 0;
-        const gel   = typeof r.GEL === 'number' ? r.GEL : 0;
+        const gel = typeof r.GEL === 'number' ? r.GEL : 0;
 
         if (query && !(
-            (r.transaction_object || '').toLowerCase().includes(query) ||
-            (r.category || '').toLowerCase().includes(query)
-        )) return false;
+                (r.transaction_object || '').toLowerCase().includes(query) ||
+                (r.category || '').toLowerCase().includes(query)
+            )) return false;
 
         if (merchant && (r.transaction_object || '') !== merchant) return false;
         if (rowMs < fromMs || rowMs > toMs) return false;
@@ -533,7 +537,7 @@ function applyTransactionFilters() {
 }
 
 function renderTransactionsTable(rows) {
-    const tbody   = document.getElementById('transactions-tbody');
+    const tbody = document.getElementById('transactions-tbody');
     const countEl = document.getElementById('transactions-count');
 
     if (!rows.length) {
@@ -543,13 +547,13 @@ function renderTransactionsTable(rows) {
     }
 
     tbody.innerHTML = rows.map(r => {
-        const raw  = r['თარიღი'];
-        const date = raw
-            ? new Date(raw).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-            : '—';
+        const raw = r['თარიღი'];
+        const date = raw ?
+            new Date(raw).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) :
+            '—';
         const merchant = r.transaction_object || '—';
         const category = r.category || '—';
-        const amount   = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
+        const amount = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
         return `<tr>
             <td>${date}</td>
             <td>${merchant}</td>
@@ -562,9 +566,9 @@ function renderTransactionsTable(rows) {
 }
 
 async function loadTransactionsTable(paymentsId) {
-    const emptyEl   = document.getElementById('transactions-empty');
+    const emptyEl = document.getElementById('transactions-empty');
     const wrapperEl = document.getElementById('transactions-wrapper');
-    const countEl   = document.getElementById('transactions-count');
+    const countEl = document.getElementById('transactions-count');
 
     try {
         const res = await fetch(`${API_BASE}/transactions?dataset_id=${paymentsId}`);
@@ -582,7 +586,7 @@ async function loadTransactionsTable(paymentsId) {
         const dates = records.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
         if (dates.length) {
             document.getElementById('filter-date-from').value = dates[0];
-            document.getElementById('filter-date-to').value   = dates[dates.length - 1];
+            document.getElementById('filter-date-to').value = dates[dates.length - 1];
         }
 
         // Populate merchant dropdown with sorted unique values
@@ -619,7 +623,7 @@ document.getElementById('avg-day-category-filter').addEventListener('change', (e
 
 // Filter inputs
 ['transactions-search', 'filter-date-from', 'filter-date-to', 'filter-merchant', 'filter-amount-min', 'filter-amount-max']
-    .forEach(id => document.getElementById(id).addEventListener('input', applyTransactionFilters));
+.forEach(id => document.getElementById(id).addEventListener('input', applyTransactionFilters));
 
 // Sort headers
 ['date', 'amount'].forEach(col => {
@@ -637,14 +641,14 @@ document.getElementById('avg-day-category-filter').addEventListener('change', (e
 
 document.getElementById('filter-reset').addEventListener('click', () => {
     document.getElementById('transactions-search').value = '';
-    document.getElementById('filter-merchant').value     = '';
-    document.getElementById('filter-amount-min').value  = '';
-    document.getElementById('filter-amount-max').value  = '';
+    document.getElementById('filter-merchant').value = '';
+    document.getElementById('filter-amount-min').value = '';
+    document.getElementById('filter-amount-max').value = '';
 
     const dates = _allTransactions.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
     if (dates.length) {
         document.getElementById('filter-date-from').value = dates[0];
-        document.getElementById('filter-date-to').value   = dates[dates.length - 1];
+        document.getElementById('filter-date-to').value = dates[dates.length - 1];
     }
 
     _sortCol = 'date';
@@ -655,10 +659,10 @@ document.getElementById('filter-reset').addEventListener('click', () => {
 
 // ── Anomaly Transactions ───────────────────────────────────
 async function loadAnomalyTransactions(paymentsId) {
-    const emptyEl   = document.getElementById('anomaly-empty');
+    const emptyEl = document.getElementById('anomaly-empty');
     const wrapperEl = document.getElementById('anomaly-wrapper');
-    const tbodyEl   = document.getElementById('anomaly-tbody');
-    const countEl   = document.getElementById('anomaly-count');
+    const tbodyEl = document.getElementById('anomaly-tbody');
+    const countEl = document.getElementById('anomaly-count');
 
     try {
         const res = await fetch(`${API_BASE}/other-insights/anomaly-transactions?dataset_id=${paymentsId}`);
@@ -682,12 +686,12 @@ async function loadAnomalyTransactions(paymentsId) {
         countEl.style.display = 'block';
 
         tbodyEl.innerHTML = sorted.map(r => {
-            const date     = r['თარიღი']
-                ? new Date(r['თარიღი']).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-                : '—';
+            const date = r['თარიღი'] ?
+                new Date(r['თარიღი']).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) :
+                '—';
             const merchant = r.transaction_object || '—';
             const category = r.category || '—';
-            const amount   = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
+            const amount = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
             return `<tr>
                 <td>${date}</td>
                 <td>${merchant}</td>
