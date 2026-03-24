@@ -46,27 +46,18 @@ async function loadExpenseBreakdown(paymentsId) {
         const labels = data.map(r => r.category);
         const total = series.reduce((a, b) => a + b, 0);
 
-        // Inject per-slice colours via a <style> tag
-        const styleTag = document.getElementById('pie-colors') || document.createElement('style');
-        styleTag.id = 'pie-colors';
-        styleTag.textContent = data.map((_, i) => `
-            .ct-series-${String.fromCharCode(97 + i)} .ct-slice-donut {
-                stroke: ${PIE_COLORS[i] || PIE_COLORS[PIE_COLORS.length - 1]};
-                fill: none;
-            }
-            .ct-series-${String.fromCharCode(97 + i)} .ct-slice-pie {
-                fill: ${PIE_COLORS[i] || PIE_COLORS[PIE_COLORS.length - 1]};
-                stroke: #fff;
-                stroke-width: 2px;
-            }
-        `).join('');
-        document.head.appendChild(styleTag);
-
-        new Chartist.Pie('#expense-breakdown-chart', { series, labels }, {
+        const pie = new Chartist.Pie('#expense-breakdown-chart', { series, labels }, {
             donut: true,
             donutWidth: 60,
             showLabel: false,
             startAngle: 270,
+        });
+
+        pie.on('draw', (ctx) => {
+            if (ctx.type === 'slice') {
+                const color = PIE_COLORS[ctx.index] || PIE_COLORS[PIE_COLORS.length - 1];
+                ctx.element.attr({ style: `stroke: ${color}; fill: none;` });
+            }
         });
 
         // Build legend
