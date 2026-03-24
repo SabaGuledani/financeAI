@@ -168,8 +168,23 @@
             <div class="card other-insights-row">
                 <div class="chart-placeholder" style="flex:1;">Chart A</div>
             </div>
-            <div class="card other-insights-row">
-                <div class="chart-placeholder" style="flex:1;">Chart B</div>
+            <div class="card other-insights-row anomaly-card">
+                <p class="card-title">Unusual Spending</p>
+                <p id="anomaly-empty" class="chart-placeholder">Upload a file to see anomaly transactions</p>
+                <div id="anomaly-wrapper" class="anomaly-wrapper" style="display:none">
+                    <table id="anomaly-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Merchant</th>
+                                <th>Category</th>
+                                <th class="amount-col">Amount (₾)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anomaly-tbody"></tbody>
+                    </table>
+                </div>
+                <p id="anomaly-count" class="transactions-count" style="display:none"></p>
             </div>
         </div>
 

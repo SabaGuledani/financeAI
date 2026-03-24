@@ -658,6 +658,24 @@ body {
     gap: 14px;
 }
 
+.anomaly-card {
+    overflow: hidden;
+}
+
+.anomaly-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+#anomaly-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
 
 /* ─── SMART INSIGHTS ─────────────────────────────────── */
 

@@ -639,6 +639,56 @@ document.getElementById('filter-reset').addEventListener('click', () => {
     renderTransactionsTable(sortRows(_allTransactions));
 });
 
+// ── Anomaly Transactions ───────────────────────────────────
+async function loadAnomalyTransactions(paymentsId) {
+    const emptyEl   = document.getElementById('anomaly-empty');
+    const wrapperEl = document.getElementById('anomaly-wrapper');
+    const tbodyEl   = document.getElementById('anomaly-tbody');
+    const countEl   = document.getElementById('anomaly-count');
+
+    try {
+        const res = await fetch(`${API_BASE}/other-insights/anomaly-transactions?dataset_id=${paymentsId}`);
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        const records = await res.json();
+
+        if (!records.length) {
+            emptyEl.textContent = 'No anomaly transactions found.';
+            return;
+        }
+
+        const sorted = [...records].sort((a, b) => {
+            const ta = a['თარიღი'] ? new Date(a['თარიღი']).getTime() : 0;
+            const tb = b['თარიღი'] ? new Date(b['თარიღი']).getTime() : 0;
+            return tb - ta;
+        });
+
+        emptyEl.style.display = 'none';
+        wrapperEl.style.display = 'block';
+        countEl.style.display = 'block';
+
+        tbodyEl.innerHTML = sorted.map(r => {
+            const date     = r['თარიღი']
+                ? new Date(r['თარიღი']).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                : '—';
+            const merchant = r.transaction_object || '—';
+            const category = r.category || '—';
+            const amount   = typeof r.GEL === 'number' ? r.GEL.toFixed(2) : '—';
+            return `<tr>
+                <td>${date}</td>
+                <td>${merchant}</td>
+                <td>${category}</td>
+                <td class="amount-cell">₾${amount}</td>
+            </tr>`;
+        }).join('');
+
+        countEl.textContent = `${sorted.length} transaction${sorted.length !== 1 ? 's' : ''}`;
+
+    } catch (err) {
+        emptyEl.textContent = `Failed to load: ${err.message}`;
+    }
+}
+
 // ── Spending Pace Warning ──────────────────────────────────
 async function loadSpentSoFarWarning(paymentsId) {
     const card = document.getElementById('spending-warning-card');
@@ -717,6 +767,7 @@ fileInput.addEventListener('change', async() => {
         loadMerchantLastTransactions(uploadData.payments_id);
         loadAvgSpendingByDay(uploadData.payments_id);
         loadTransactionsTable(uploadData.payments_id);
+        loadAnomalyTransactions(uploadData.payments_id);
 
     } catch (err) {
         statusEl.className = 'upload-status upload-status--error';
