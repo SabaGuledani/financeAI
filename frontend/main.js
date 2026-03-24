@@ -468,15 +468,46 @@ async function loadAvgSpendingByDay(paymentsId) {
 
 // ── Transactions Table ─────────────────────────────────────
 let _allTransactions = [];
+let _sortCol = 'date';   // 'date' | 'amount'
+let _sortDir = 'desc';   // 'asc'  | 'desc'
+
+function sortRows(rows) {
+    return [...rows].sort((a, b) => {
+        let va, vb;
+        if (_sortCol === 'date') {
+            va = a['თარიღი'] ? new Date(a['თარიღი']).getTime() : 0;
+            vb = b['თარიღი'] ? new Date(b['თარიღი']).getTime() : 0;
+        } else {
+            va = typeof a.GEL === 'number' ? a.GEL : 0;
+            vb = typeof b.GEL === 'number' ? b.GEL : 0;
+        }
+        return _sortDir === 'asc' ? va - vb : vb - va;
+    });
+}
+
+function updateSortHeaders() {
+    ['date', 'amount'].forEach(col => {
+        const th    = document.getElementById(`th-${col}`);
+        const arrow = th.querySelector('.sort-arrow');
+        if (col === _sortCol) {
+            th.classList.add('sort-active');
+            arrow.textContent = _sortDir === 'asc' ? '↑' : '↓';
+        } else {
+            th.classList.remove('sort-active');
+            arrow.textContent = '';
+        }
+    });
+}
 
 function applyTransactionFilters() {
     if (!_allTransactions.length) return;
 
-    const query     = document.getElementById('transactions-search').value.trim().toLowerCase();
-    const dateFrom  = document.getElementById('filter-date-from').value;   // 'YYYY-MM-DD' or ''
-    const dateTo    = document.getElementById('filter-date-to').value;
-    const amountMin = parseFloat(document.getElementById('filter-amount-min').value);
-    const amountMax = parseFloat(document.getElementById('filter-amount-max').value);
+    const query      = document.getElementById('transactions-search').value.trim().toLowerCase();
+    const dateFrom   = document.getElementById('filter-date-from').value;
+    const dateTo     = document.getElementById('filter-date-to').value;
+    const merchant   = document.getElementById('filter-merchant').value;
+    const amountMin  = parseFloat(document.getElementById('filter-amount-min').value);
+    const amountMax  = parseFloat(document.getElementById('filter-amount-max').value);
 
     const fromMs = dateFrom ? new Date(dateFrom).getTime() : -Infinity;
     const toMs   = dateTo   ? new Date(dateTo + 'T23:59:59').getTime() : Infinity;
@@ -490,6 +521,7 @@ function applyTransactionFilters() {
             (r.category || '').toLowerCase().includes(query)
         )) return false;
 
+        if (merchant && (r.transaction_object || '') !== merchant) return false;
         if (rowMs < fromMs || rowMs > toMs) return false;
         if (!isNaN(amountMin) && gel < amountMin) return false;
         if (!isNaN(amountMax) && gel > amountMax) return false;
@@ -497,7 +529,7 @@ function applyTransactionFilters() {
         return true;
     });
 
-    renderTransactionsTable(filtered);
+    renderTransactionsTable(sortRows(filtered));
 }
 
 function renderTransactionsTable(rows) {
@@ -539,7 +571,6 @@ async function loadTransactionsTable(paymentsId) {
         if (!res.ok) throw new Error(`Server error ${res.status}`);
 
         const records = await res.json();
-        records.sort((a, b) => new Date(b['თარიღი']) - new Date(a['თარიღი']));
         _allTransactions = records;
 
         if (!records.length) {
@@ -547,39 +578,65 @@ async function loadTransactionsTable(paymentsId) {
             return;
         }
 
-        // Pre-fill date range bounds from actual data
+        // Pre-fill date range from actual data
         const dates = records.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
         if (dates.length) {
             document.getElementById('filter-date-from').value = dates[0];
             document.getElementById('filter-date-to').value   = dates[dates.length - 1];
         }
 
+        // Populate merchant dropdown with sorted unique values
+        const merchants = [...new Set(records.map(r => r.transaction_object).filter(Boolean))].sort();
+        const select = document.getElementById('filter-merchant');
+        select.innerHTML = '<option value="">All merchants</option>' +
+            merchants.map(m => `<option value="${m}">${m}</option>`).join('');
+
         emptyEl.style.display = 'none';
         wrapperEl.style.display = 'block';
         countEl.style.display = 'block';
 
-        renderTransactionsTable(records);
+        updateSortHeaders();
+        renderTransactionsTable(sortRows(records));
 
     } catch (err) {
         emptyEl.textContent = `Failed to load payments: ${err.message}`;
     }
 }
 
-['transactions-search', 'filter-date-from', 'filter-date-to', 'filter-amount-min', 'filter-amount-max']
+// Filter inputs
+['transactions-search', 'filter-date-from', 'filter-date-to', 'filter-merchant', 'filter-amount-min', 'filter-amount-max']
     .forEach(id => document.getElementById(id).addEventListener('input', applyTransactionFilters));
+
+// Sort headers
+['date', 'amount'].forEach(col => {
+    document.getElementById(`th-${col}`).addEventListener('click', () => {
+        if (_sortCol === col) {
+            _sortDir = _sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            _sortCol = col;
+            _sortDir = col === 'date' ? 'desc' : 'desc';
+        }
+        updateSortHeaders();
+        applyTransactionFilters();
+    });
+});
 
 document.getElementById('filter-reset').addEventListener('click', () => {
     document.getElementById('transactions-search').value = '';
+    document.getElementById('filter-merchant').value     = '';
     document.getElementById('filter-amount-min').value  = '';
     document.getElementById('filter-amount-max').value  = '';
 
-    // Re-set dates to full data range
     const dates = _allTransactions.map(r => r['თარიღი']).filter(Boolean).map(d => d.slice(0, 10)).sort();
     if (dates.length) {
         document.getElementById('filter-date-from').value = dates[0];
         document.getElementById('filter-date-to').value   = dates[dates.length - 1];
     }
-    renderTransactionsTable(_allTransactions);
+
+    _sortCol = 'date';
+    _sortDir = 'desc';
+    updateSortHeaders();
+    renderTransactionsTable(sortRows(_allTransactions));
 });
 
 // ── Upload ─────────────────────────────────────────────────

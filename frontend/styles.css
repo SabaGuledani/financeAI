@@ -760,6 +760,11 @@ body {
     border-color: #455e91;
 }
 
+.filter-select {
+    width: 180px;
+    cursor: pointer;
+}
+
 .transactions-wrapper {
     overflow-y: auto;
     overflow-x: auto;
@@ -767,6 +772,27 @@ body {
     flex: 1;
     border-radius: 8px;
     border: 1px solid #f0f0f0;
+}
+
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+th.sortable:hover {
+    color: #333;
+}
+
+th.sort-active {
+    color: #455e91;
+}
+
+.sort-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 12px;
+    opacity: 0.7;
 }
 
 .transactions-count {
