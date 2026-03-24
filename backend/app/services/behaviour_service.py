@@ -18,9 +18,11 @@ def get_top_merchant_last_transactions(df:pd.DataFrame, n:int=5):
     merchant_df = df[df["transaction_object"] == top_merchant]
     return merchant_df.sort_values(by="თარიღი", ascending=False).head(n)[["თარიღი", "transaction_object", "GEL"]]
 
-def get_avg_spending_by_weekday(df:pd.DataFrame):
+def get_avg_spending_by_weekday(df:pd.DataFrame, category:str="all"):
     df = df.copy()
     df["weekday"] = df["თარიღი"].dt.dayofweek  # 0=Monday, 6=Sunday
+    if category != "all":
+        df = df[df["category"] == category]
     avg = df.groupby("weekday")[["GEL","USD","EUR","GBP"]].mean()
     avg = avg.reindex(range(7), fill_value=0)
     avg["weekday_name"] = WEEKDAY_NAMES

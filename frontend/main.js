@@ -396,13 +396,13 @@ async function loadTopMerchant(paymentsId) {
 }
 
 // ── Average Spending by Day of Week bar chart ──────────────
-async function loadAvgSpendingByDay(paymentsId) {
+async function loadAvgSpendingByDay(paymentsId, category = 'all') {
     const chartEl = document.getElementById('avg-spending-day-chart');
     const emptyEl = document.getElementById('avg-spending-day-empty');
 
     try {
         const res = await fetch(
-            `${API_BASE}/behaviour/avg-spending-by-weekday?dataset_id=${paymentsId}`
+            `${API_BASE}/behaviour/avg-spending-by-weekday?dataset_id=${paymentsId}&category=${encodeURIComponent(category)}`
         );
         if (!res.ok) throw new Error(`Server error ${res.status}`);
 
@@ -591,6 +591,13 @@ async function loadTransactionsTable(paymentsId) {
         select.innerHTML = '<option value="">All merchants</option>' +
             merchants.map(m => `<option value="${m}">${m}</option>`).join('');
 
+        // Populate avg-by-day category dropdown
+        const categories = [...new Set(records.map(r => r.category).filter(Boolean))].sort();
+        const catSelect = document.getElementById('avg-day-category-filter');
+        catSelect.innerHTML = '<option value="all">All categories</option>' +
+            categories.map(c => `<option value="${c}">${c}</option>`).join('');
+        catSelect.disabled = false;
+
         emptyEl.style.display = 'none';
         wrapperEl.style.display = 'block';
         countEl.style.display = 'block';
@@ -602,6 +609,13 @@ async function loadTransactionsTable(paymentsId) {
         emptyEl.textContent = `Failed to load payments: ${err.message}`;
     }
 }
+
+// Avg-by-day category filter
+document.getElementById('avg-day-category-filter').addEventListener('change', (e) => {
+    if (window._paymentsId) {
+        loadAvgSpendingByDay(window._paymentsId, e.target.value);
+    }
+});
 
 // Filter inputs
 ['transactions-search', 'filter-date-from', 'filter-date-to', 'filter-merchant', 'filter-amount-min', 'filter-amount-max']

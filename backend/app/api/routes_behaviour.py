@@ -57,11 +57,14 @@ def top_merchant_last_transactions(dataset_id: str = Query(..., description="ID 
 
 
 @router.get("/behaviour/avg-spending-by-weekday")
-def avg_spending_by_weekday(dataset_id: str = Query(..., description="ID returned by /upload")):
+def avg_spending_by_weekday(
+    dataset_id: str = Query(..., description="ID returned by /upload"),
+    category: str = Query("all", description="Category to filter by, or 'all' for no filter"),
+):
     df = dataset_store.get(dataset_id)
 
     if df is None:
         raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
 
-    result = get_avg_spending_by_weekday(df)
+    result = get_avg_spending_by_weekday(df, category=category)
     return result.to_dict(orient="records")

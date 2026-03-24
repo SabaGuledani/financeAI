@@ -597,6 +597,36 @@ body {
     overflow: hidden;
 }
 
+.card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.chart-category-select {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 1px solid #dde1ec;
+    border-radius: 7px;
+    outline: none;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    min-width: 140px;
+}
+
+.chart-category-select:focus {
+    border-color: #455e91;
+}
+
+.chart-category-select:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
 .frequency-card {
     height: 460px;
     padding: 28px 32px;
