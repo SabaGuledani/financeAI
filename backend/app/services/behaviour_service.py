@@ -23,7 +23,7 @@ def get_avg_spending_by_weekday(df:pd.DataFrame, category:str="all"):
     df["weekday"] = df["თარიღი"].dt.dayofweek  # 0=Monday, 6=Sunday
     if category != "all":
         df = df[df["category"] == category]
-    avg = df.groupby("weekday")[["GEL","USD","EUR","GBP"]].mean()
+    avg = df.groupby("weekday")[["GEL","USD","EUR","GBP"]].median()
     avg = avg.reindex(range(7), fill_value=0)
     avg["weekday_name"] = WEEKDAY_NAMES
     return avg.reset_index()
