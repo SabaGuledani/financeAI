@@ -156,6 +156,11 @@ body {
     white-space: nowrap;
 }
 
+.card-title--wrap {
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
 .merchant-center {
     flex: 1;
     display: flex;
@@ -345,13 +350,13 @@ body {
 /* Chartist line overrides */
 
 #spending-over-time-chart .ct-line {
-    stroke: #6c63ff;
+    stroke: #455E91;
     stroke-width: 3px;
     fill: none;
 }
 
 #spending-over-time-chart .ct-point {
-    stroke: #6c63ff;
+    stroke: #455E91;
     stroke-width: 12px;
     stroke-linecap: round;
     cursor: pointer;
@@ -424,7 +429,7 @@ body {
 }
 
 #top-merchants-chart .ct-bar {
-    stroke: #6c63ff;
+    stroke: #455E91;
     stroke-width: 18px;
     stroke-linecap: round;
     cursor: pointer;
@@ -506,7 +511,7 @@ body {
 }
 
 #avg-spending-day-chart .ct-bar {
-    stroke: #6c63ff;
+    stroke: #455E91;
     stroke-width: 28px;
     stroke-linecap: round;
     cursor: pointer;
