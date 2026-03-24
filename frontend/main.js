@@ -4,11 +4,9 @@ const fileInput = document.getElementById('file-input');
 const uploadBtn = document.getElementById('upload-btn');
 const statusEl = document.getElementById('upload-status');
 
-// ── Pie chart colours (cycles if more categories) ──────────
+// ── Pie chart colours: biggest → smallest → others ─────────
 const PIE_COLORS = [
-    '#6c63ff', '#ff6584', '#43b89c', '#f9a825',
-    '#ef5350', '#42a5f5', '#ab47bc', '#26a69a',
-    '#ff7043', '#8d6e63',
+    '#455e91', '#6681B7', '#9EAFD1', '#bac6de', '#CCDAF5', '#DFE9F3',
 ];
 
 async function loadExpenseBreakdown(paymentsId) {
@@ -24,12 +22,21 @@ async function loadExpenseBreakdown(paymentsId) {
 
         const records = await res.json();
 
-        // Filter out zero / negative GEL values
-        const data = records.filter(r => r.GEL > 0);
-        if (!data.length) {
+        // Filter out zero / negative GEL values, already sorted desc by backend
+        const positive = records.filter(r => r.GEL > 0);
+        if (!positive.length) {
             emptyEl.textContent = 'No GEL spending data found.';
             return;
         }
+
+        // Top 5 + "Others" bucket for the rest
+        const top5 = positive.slice(0, 5);
+        const rest = positive.slice(5);
+        const othersTotal = rest.reduce((sum, r) => sum + r.GEL, 0);
+
+        const data = othersTotal > 0
+            ? [...top5, { category: 'Others', GEL: othersTotal }]
+            : top5;
 
         emptyEl.style.display = 'none';
         chartEl.style.display = 'block';
@@ -43,8 +50,12 @@ async function loadExpenseBreakdown(paymentsId) {
         const styleTag = document.getElementById('pie-colors') || document.createElement('style');
         styleTag.id = 'pie-colors';
         styleTag.textContent = data.map((_, i) => `
+            .ct-series-${String.fromCharCode(97 + i)} .ct-slice-donut {
+                stroke: ${PIE_COLORS[i] || PIE_COLORS[PIE_COLORS.length - 1]};
+                fill: none;
+            }
             .ct-series-${String.fromCharCode(97 + i)} .ct-slice-pie {
-                fill: ${PIE_COLORS[i % PIE_COLORS.length]};
+                fill: ${PIE_COLORS[i] || PIE_COLORS[PIE_COLORS.length - 1]};
                 stroke: #fff;
                 stroke-width: 2px;
             }
@@ -61,7 +72,7 @@ async function loadExpenseBreakdown(paymentsId) {
         // Build legend
         legendEl.innerHTML = data.map((r, i) => `
             <li class="pie-legend-item">
-                <span class="pie-legend-dot" style="background:${PIE_COLORS[i % PIE_COLORS.length]}"></span>
+                <span class="pie-legend-dot" style="background:${PIE_COLORS[i] || PIE_COLORS[PIE_COLORS.length - 1]}"></span>
                 <span class="pie-legend-label">${r.category}</span>
                 <span class="pie-legend-value">₾${r.GEL.toFixed(2)}</span>
                 <span class="pie-legend-pct">${((r.GEL / total) * 100).toFixed(1)}%</span>
