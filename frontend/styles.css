@@ -22,9 +22,6 @@ body {
     align-items: center;
     justify-content: center;
     padding: 28px 60px 28px 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
