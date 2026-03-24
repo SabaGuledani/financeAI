@@ -2,6 +2,8 @@ import re
 import json
 import ast
 import pandas as pd
+from app.database.db import SessionLocal
+from app.models.categories_model import Categories
 def clean_response(text, parse_as="json"):
     """
     Cleans LLM output by removing code fences and parses it.
@@ -39,3 +41,19 @@ def get_unknown_merchants(merchants_df:pd.DataFrame, merchants_list:list):
     existing_merchants = list(merchants_df["merchant"].unique())
     merchants_list = [merchant for merchant in merchants_list if merchant not in existing_merchants]
     return merchants_list 
+
+def get_all_categories():
+    db = SessionLocal()
+    try:
+        records = db.query(Categories).all()
+        return [{"merchant": r.merchant, "category": r.category, "confidence": r.confidence} for r in records]
+    finally:
+        db.close()
+
+def get_eixisting_categories_df(df: pd.DataFrame):
+    records = get_all_categories()
+    if records:
+        categories_table = pd.DataFrame(records)
+    else:
+        categories_table = pd.DataFrame(columns=["merchant", "category", "confidence"])
+    return categories_table

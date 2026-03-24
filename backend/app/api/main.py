@@ -8,7 +8,7 @@ from app.api.routes_main_insights import router as main_insights_router
 from app.api.routes_behaviour import router as behaviour_router
 from app.api.routes_other_insights import router as other_insights_router
 from app.api.routes_summary import router as summary_router
-from app.api.categories_route import router as categories_router
+from app.api.routes_categories import router as categories_router
 from app.utils.init_db import create_db
 from dotenv import load_dotenv
 import os

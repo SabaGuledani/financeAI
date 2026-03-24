@@ -1,5 +1,8 @@
 import pandas as pd
 
+def get_full_dataframe(df: pd.DataFrame):
+    return df
+
 def get_anomaly_transactions(df:pd.DataFrame, currency:str="GEL"):
     std = df[currency].std()
     mean = df[currency].mean()

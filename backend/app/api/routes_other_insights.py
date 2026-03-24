@@ -3,10 +3,22 @@ from fastapi import APIRouter, HTTPException, Query
 from app.utils.dataset_store import dataset_store
 from app.services.other_insights_service import (
     get_anomaly_transactions,
+    get_full_dataframe,
     get_month_category_comparison,
 )
 
 router = APIRouter()
+
+
+@router.get("/other-insights/dataframe")
+def full_dataframe(
+    dataset_id: str = Query(..., description="ID returned by /upload"),
+):
+    df = dataset_store.get(dataset_id)
+    if df is None:
+        raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
+    result = get_full_dataframe(df)
+    return result.to_dict(orient="records")
 
 
 @router.get("/other-insights/anomaly-transactions")
