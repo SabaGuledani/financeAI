@@ -10,6 +10,7 @@ from app.services.main_insights_service import (
     get_biggest_spending,
     get_transaction_count,
     get_spent_so_far_warning,
+    get_monthly_spending_prediction,
 )
 
 router = APIRouter()
@@ -86,3 +87,14 @@ def spent_so_far_warning(
     if df is None:
         raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
     return {"message": get_spent_so_far_warning(df, currency=currency)}
+
+
+@router.get("/main-insights/monthly-spending-prediction")
+def monthly_spending_prediction(
+    dataset_id: str = Query(..., description="ID returned by /upload"),
+    currency: str = Query("GEL", description="Currency column (GEL, USD, EUR, GBP)"),
+):
+    df = dataset_store.get(dataset_id)
+    if df is None:
+        raise HTTPException(status_code=404, detail="Dataset not found or expired. Please re-upload the file.")
+    return {"message": get_monthly_spending_prediction(df, currency=currency)}

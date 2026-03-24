@@ -337,11 +337,23 @@ body {
     font-size: 0.9rem;
     color: var(--text-secondary, #555);
     border-left: 4px solid #455e91;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
 }
 
 .spending-warning p {
     margin: 0;
     line-height: 1.5;
+    flex: 1;
+}
+
+.warning-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: block;
 }
 
 /* ─── SPENDING OVER TIME ─────────────────────────────── */

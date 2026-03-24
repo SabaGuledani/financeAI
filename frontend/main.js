@@ -643,8 +643,27 @@ document.getElementById('filter-reset').addEventListener('click', () => {
 async function loadSpentSoFarWarning(paymentsId) {
     const card = document.getElementById('spending-warning-card');
     const textEl = document.getElementById('spending-warning-text');
+    const iconEl = document.getElementById('spending-warning-icon');
     try {
         const res = await fetch(`${API_BASE}/main-insights/spent-so-far-warning?dataset_id=${paymentsId}`);
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const data = await res.json();
+        const isWarning = data.message.includes('may exceed');
+        iconEl.src = isWarning ? 'src/icons/warning.png' : 'src/icons/happy.png';
+        iconEl.alt = isWarning ? 'Warning' : 'On track';
+        textEl.textContent = data.message;
+        card.style.display = 'flex';
+    } catch (err) {
+        card.style.display = 'none';
+    }
+}
+
+// ── Monthly Spending Prediction ────────────────────────────
+async function loadMonthlySpendingPrediction(paymentsId) {
+    const card = document.getElementById('spending-prediction-card');
+    const textEl = document.getElementById('spending-prediction-text');
+    try {
+        const res = await fetch(`${API_BASE}/main-insights/monthly-spending-prediction?dataset_id=${paymentsId}`);
         if (!res.ok) throw new Error(`Server error ${res.status}`);
         const data = await res.json();
         textEl.textContent = data.message;
@@ -689,6 +708,7 @@ fileInput.addEventListener('change', async() => {
         loadExpenseBreakdown(uploadData.payments_id);
         loadSpentSoFarWarning(uploadData.payments_id);
         loadSpendingOverTime(uploadData.payments_id);
+        loadMonthlySpendingPrediction(uploadData.payments_id);
         loadTopMerchants(uploadData.payments_id);
         loadTopMerchant(uploadData.payments_id);
         loadBiggestPurchase(uploadData.payments_id);
