@@ -9,7 +9,7 @@
 body {
     background-color: #f3f3fa;
     font-family: 'IBM Plex Mono', monospace;
-    color: #000;
+    color: #0d121c;
     min-height: 100vh;
 }
 
@@ -20,7 +20,7 @@ body {
     background-color: #f3f3fa;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 28px 60px 28px 60px;
     position: sticky;
     top: 0;
@@ -35,7 +35,7 @@ body {
     font-size: 28px;
     font-weight: 400;
     text-decoration: none;
-    color: #000;
+    color: #0d121c;
 }
 
 .navbar-brand img {
@@ -90,7 +90,7 @@ body {
     cursor: pointer;
     border: 2px dashed #ccc;
     transition: border-color 0.2s, background 0.2s;
-    color: #000;
+    color: #0d121c;
 }
 
 .upload-btn:hover {
