@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://finance-dashboard-30hz.onrender.com';
 
 const fileInput = document.getElementById('file-input');
 const uploadBtn = document.getElementById('upload-btn');
@@ -34,8 +34,7 @@ async function loadExpenseBreakdown(paymentsId) {
         const rest = positive.slice(5);
         const othersTotal = rest.reduce((sum, r) => sum + r.GEL, 0);
 
-        const data = othersTotal > 0 ?
-            [...top5, { category: 'Others', GEL: othersTotal }] :
+        const data = othersTotal > 0 ? [...top5, { category: 'Others', GEL: othersTotal }] :
             top5;
 
         emptyEl.style.display = 'none';
