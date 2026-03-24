@@ -1,5 +1,5 @@
 import pandas as pd
-
+from datetime import datetime
 
 def get_spending_by_month(df:pd.DataFrame):
     df["month"] = df["თარიღი"].dt.month
@@ -30,3 +30,23 @@ def get_biggest_spending(df:pd.DataFrame,currency:str="GEL"):
 def get_transaction_count(df:pd.DataFrame):
     count = int(df['თარიღი'].count())
     return count
+
+def get_spent_so_far_warning(df:pd.DataFrame, currency:str="GEL"):
+    today = datetime.today()
+    start_of_month = today.replace(day=1)
+
+    # Current month spending
+    current_month_df = df[df['თარიღი'] >= start_of_month]
+    spent_so_far = current_month_df[currency].sum()
+    days_passed = today.day
+
+    median_monthly_spending = get_spending_by_month(df).reset_index()[currency].median()
+
+    percentage = spent_so_far / median_monthly_spending * 100
+    expected_percentage = days_passed / 30 * 100
+    predicted_total = spent_so_far / days_passed * 30
+    predicted_pace = f"You spent {percentage:.0f}% of your usual monthly spending in the first {days_passed} days. You're projected to spend {predicted_total:.0f} {currency} this month."
+    if percentage > expected_percentage * 1.3:
+        return f"At this pace, you may exceed your typical monthly spending. {predicted_pace}"
+    else:
+        return f"At this pace you are not likely to exceed your typical monthly spending. {predicted_pace}"
