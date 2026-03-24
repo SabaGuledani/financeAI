@@ -667,7 +667,7 @@ async function loadMonthlySpendingPrediction(paymentsId) {
         if (!res.ok) throw new Error(`Server error ${res.status}`);
         const data = await res.json();
         textEl.textContent = data.message;
-        card.style.display = 'block';
+        card.style.display = 'flex';
     } catch (err) {
         card.style.display = 'none';
     }
