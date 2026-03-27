@@ -20,9 +20,37 @@ body {
     background-color: #f3f3fa;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 28px 60px 28px 60px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-desktop-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: #999;
+}
+
+.navbar-github {
+    display: flex;
+    align-items: center;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.navbar-github:hover {
+    color: #0d121c;
+}
+
+.github-icon {
+    width: 26px;
+    height: 26px;
 }
 
 .navbar-brand {
