@@ -1,5 +1,13 @@
 const API_BASE = 'https://finance-dashboard-30hz.onrender.com';
 
+function toggleInstructions() {
+    const panel = document.getElementById('instructions-panel');
+    const btn = document.getElementById('instructions-btn');
+    const isVisible = panel.style.display !== 'none';
+    panel.style.display = isVisible ? 'none' : 'block';
+    btn.classList.toggle('active', !isVisible);
+}
+
 const fileInput = document.getElementById('file-input');
 const uploadBtn = document.getElementById('upload-btn');
 const statusEl = document.getElementById('upload-status');

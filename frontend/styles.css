@@ -100,6 +100,55 @@ body {
     cursor: not-allowed;
 }
 
+.upload-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.instructions-btn {
+    background: transparent;
+    border: 2px solid #ccc;
+    border-radius: 24px;
+    height: 120px;
+    padding: 0 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    color: #555;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    white-space: nowrap;
+}
+
+.instructions-btn:hover {
+    border-color: #999;
+    color: #0d121c;
+    background: #fafafe;
+}
+
+.instructions-btn.active {
+    border-color: #455e91;
+    color: #455e91;
+    background: #f0f4fb;
+}
+
+.instructions-panel {
+    margin-top: 16px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px 32px;
+    max-width: 520px;
+}
+
+.instructions-list {
+    margin: 0;
+    padding-left: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: #333;
+    line-height: 2;
+}
+
 .upload-status {
     margin-top: 10px;
     font-size: 15px;

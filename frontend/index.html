@@ -26,11 +26,26 @@
 
         <!-- Upload -->
         <div>
-            <input type="file" id="file-input" accept=".xlsx,.xls" hidden />
-            <button class="upload-btn" id="upload-btn" onclick="document.getElementById('file-input').click()">
-                Upload file
-            </button>
+            <div class="upload-row">
+                <input type="file" id="file-input" accept=".xlsx,.xls" hidden />
+                <button class="upload-btn" id="upload-btn" onclick="document.getElementById('file-input').click()">
+                    Upload file
+                </button>
+                <button class="instructions-btn" id="instructions-btn" onclick="toggleInstructions()">
+                    See instructions
+                </button>
+            </div>
             <p class="upload-status" id="upload-status"></p>
+
+            <div id="instructions-panel" class="instructions-panel" style="display:none;">
+                <ol class="instructions-list">
+                    <li>Open Bank of Georgia app.</li>
+                    <li>Click on your card.</li>
+                    <li>Click the <strong>„ამონაწერი"</strong> button.</li>
+                    <li>Upload the downloaded file to this website.</li>
+                    <li>Wait a moment — the server may take a few seconds to wake up if it's been inactive.</li>
+                </ol>
+            </div>
         </div>
 
         <!-- ── MAIN INSIGHTS ─────────────────────────────── -->
@@ -166,39 +181,23 @@
             <p class="section-sub">Other Insights</p>
         </div>
 
-        <div class="other-insights-grid">
-            <div class="card other-insights-row">
-                <div class="chart-placeholder" style="flex:1;">Chart A</div>
+        <div class="card other-insights-row anomaly-card">
+            <p class="card-title">Unusual Spending</p>
+            <p id="anomaly-empty" class="chart-placeholder">Upload a file to see anomaly transactions</p>
+            <div id="anomaly-wrapper" class="anomaly-wrapper" style="display:none">
+                <table id="anomaly-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Merchant</th>
+                            <th>Category</th>
+                            <th class="amount-col">Amount (₾)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="anomaly-tbody"></tbody>
+                </table>
             </div>
-            <div class="card other-insights-row anomaly-card">
-                <p class="card-title">Unusual Spending</p>
-                <p id="anomaly-empty" class="chart-placeholder">Upload a file to see anomaly transactions</p>
-                <div id="anomaly-wrapper" class="anomaly-wrapper" style="display:none">
-                    <table id="anomaly-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Merchant</th>
-                                <th>Category</th>
-                                <th class="amount-col">Amount (₾)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="anomaly-tbody"></tbody>
-                    </table>
-                </div>
-                <p id="anomaly-count" class="transactions-count" style="display:none"></p>
-            </div>
-        </div>
-
-        <!-- ── SMART INSIGHTS ────────────────────────────── -->
-        <div class="card smart-insights">
-            <p class="smart-insights-title">Smart insights</p>
-            <p class="smart-insights-text">
-                You spent $720 in the first 10 days of this month.<br /> That's 65% of your usual monthly spending.
-            </p>
-            <p class="smart-insights-text">
-                Glovo accounts for 18% of your total spending this month.
-            </p>
+            <p id="anomaly-count" class="transactions-count" style="display:none"></p>
         </div>
 
         <!-- ── TRANSACTION TABLE ─────────────────────────── -->
