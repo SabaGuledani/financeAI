@@ -1,4 +1,5 @@
 const API_BASE = 'https://finance-dashboard-30hz.onrender.com';
+// const API_BASE = 'http://localhost:8000';
 
 function toggleInstructions() {
     const panel = document.getElementById('instructions-panel');

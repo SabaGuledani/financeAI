@@ -1,11 +1,12 @@
 import pandas as pd
 from datetime import datetime
 
-def get_spending_by_month(df:pd.DataFrame):
+def get_spending_by_month(df: pd.DataFrame):
+    df = df.copy()
     df["month"] = df["თარიღი"].dt.month
     df["year"] = df["თარიღი"].dt.year
-    
-    df = df.groupby(["year","month"])[["GEL","USD","EUR","GBP"]].sum()
+
+    df = df.groupby(["year", "month"])[["GEL", "USD", "EUR", "GBP"]].sum()
     return df
 def get_spending_by_category(df:pd.DataFrame):
     print(df.columns)
@@ -41,6 +42,9 @@ def get_spent_so_far_warning(df:pd.DataFrame, currency:str="GEL"):
     days_passed = today.day
 
     median_monthly_spending = get_spending_by_month(df).reset_index()[currency].median()
+
+    if median_monthly_spending == 0:
+        return "Not enough spending history to calculate a warning."
 
     percentage = spent_so_far / median_monthly_spending * 100
     expected_percentage = days_passed / 30 * 100
