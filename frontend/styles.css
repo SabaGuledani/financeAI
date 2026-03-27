@@ -177,6 +177,14 @@ body {
     line-height: 2;
 }
 
+.instructions-privacy-note {
+    margin: 16px 0 0 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #888;
+    line-height: 1.6;
+}
+
 .upload-status {
     margin-top: 10px;
     font-size: 15px;
